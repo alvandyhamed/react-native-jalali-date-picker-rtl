@@ -13,6 +13,7 @@ const {
   Text,
   TouchableOpacity,
   View,
+    Picker
 } = require('react-native');
 
 const styles = require('./style');
@@ -32,10 +33,15 @@ class HeaderControls extends React.Component {
 
   constructor(props) {
     super(props);
+      let yearess=[]
+      for(let i=1320;i<=this.props.year;i++){
+        yearess.push(i)
+      }
+           this.state = {
+          selectedMonth: this.props.month,
+          years:yearess
 
-    this.state = {
-      selectedMonth: this.props.month
-    };
+      };
 
     this.getNext = this.getNext.bind(this);
     this.getPrevious = this.getPrevious.bind(this);
@@ -114,7 +120,12 @@ class HeaderControls extends React.Component {
   }
 
   render() {
-    let textStyle = this.props.textStyle;
+      let serviceItems = this.state.years.map( (s, i) => {
+
+          return <Picker.Item key={i} value={s} label={s} />
+      });
+
+      let textStyle = this.props.textStyle;
 
     let previous;
     if (this.previousMonthDisabled()) {
@@ -144,16 +155,32 @@ class HeaderControls extends React.Component {
       );
     }
 
+
     return (
       <View style={[styles.headerWrapper, this.props.reverse && styles.rtl]}>
         <View style={styles.monthSelector}>
           {next}
         </View>
+
         <View>
-          <Text style={[styles.monthLabel, textStyle]}>
-            {(this.props.months || MONTHS)[this.state.selectedMonth]} {this.props.year.toString().PersianNumber()}
+        <Text style={[styles.monthLabel, textStyle]}
+          >
+              {(this.props.months || MONTHS)[this.state.selectedMonth]}
           </Text>
+          <View style={{justifyContent:'center',alignItems:'center'}}>
+            <Picker
+                selectedValue={this.state.language}
+                style={{ height: 50, width: 100 ,borderWidth:1}}
+                onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
+
+                {this.state.years.map(( i) => {
+                    return <Picker.Item key={i} value={i+''} label={i.toString().PersianNumber()} />
+                })}
+            </Picker>
+          </View>
         </View>
+
+
         <View style={styles.monthSelector}>
           {previous}
         </View>
@@ -164,3 +191,4 @@ class HeaderControls extends React.Component {
 }
 
 module.exports = HeaderControls;
+
