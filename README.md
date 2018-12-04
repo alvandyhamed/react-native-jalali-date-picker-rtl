@@ -54,3 +54,5 @@ Add the following code in your component :
 
 #### new prop in version
 	`reverse: true|false`
+	
+### this version has selectable jalali years
